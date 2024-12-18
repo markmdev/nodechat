@@ -6,10 +6,12 @@ import Login from "./components/Login";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
 import Register from "./components/Register";
+import { useContext } from "react";
+import { Link } from "react-router-dom";
 
 function App() {
   const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
+  const { handleLogout, error, setError } = useContext(AuthContext);
 
   useEffect(() => {
     socket.connect();
@@ -38,73 +40,12 @@ function App() {
       });
   }, []);
 
-  const handleRegister = async (username, password) => {
-    setError("");
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/auth/register",
-        { username, password },
-        {
-          withCredentials: true,
-        }
-      );
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-      if (error.response) {
-        setError(error.response.data.error);
-      } else {
-        setError(error.message);
-      }
-    }
-  };
-
-  const handleLogin = async (username, password) => {
-    setError("");
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/auth/login",
-        { username, password },
-        {
-          withCredentials: true,
-        }
-      );
-      console.log(response);
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
-      if (error.response) {
-        setError(error.response.data.error);
-      } else {
-        setError(error.message);
-      }
-    }
-  };
-
-  const handleLogout = async () => {
-    setError("");
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/auth/logout",
-        {},
-        { withCredentials: true }
-      );
-      console.log(response);
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
-      if (error.response) {
-        setError(error.response.data.error);
-      } else {
-        setError(error.message);
-      }
-    }
-  };
-
   return (
     <>
-      <Login handleLogin={handleLogin} />
-      <Register handleRegister={handleRegister} />
+      <Link to="/login">Login</Link>
+      <br />
+      <Link to="/register">Register</Link>
+      <br />
       <button onClick={() => handleLogout()}>Logout</button>
       {user && user.username}
       {error}
