@@ -2,6 +2,21 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { users } = require("../model/users");
 
+exports.verify = (req, res, next) => {
+  // Middleware for verifying user's authentication
+  const token = req.cookies.token;
+  if (!token) return res.status(401).send({ error: "Unauthorized" });
+
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(user);
+    req.user = user;
+    next();
+  } catch (error) {
+    res.status(401).json({ error: error.message });
+  }
+};
+
 exports.register = async (req, res) => {
   const { username, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);

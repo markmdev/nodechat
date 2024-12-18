@@ -8,17 +8,12 @@ import { AuthContext } from "./AuthContext";
 import Register from "./components/Register";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
+import Chat from "./components/Chat";
 
 function App() {
   const [user, setUser] = useState(null);
-  const { handleLogout, error, setError } = useContext(AuthContext);
-
-  useEffect(() => {
-    socket.connect();
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  const { handleLogout } = useContext(AuthContext);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setError("");
@@ -40,14 +35,23 @@ function App() {
       });
   }, []);
 
+  if (!user) {
+    return (
+      <>
+        <Link to="/login">Login</Link>
+        <br />
+        <Link to="/register">Register</Link>
+        <br />
+        {error}
+      </>
+    );
+  }
+
   return (
     <>
-      <Link to="/login">Login</Link>
-      <br />
-      <Link to="/register">Register</Link>
+      <Chat user={user} />
       <br />
       <button onClick={() => handleLogout()}>Logout</button>
-      {user && user.username}
       {error}
     </>
   );
