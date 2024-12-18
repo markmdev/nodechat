@@ -19,6 +19,7 @@ function App() {
   }, []);
 
   useEffect(() => {
+    setError("");
     axios
       .get("http://localhost:8000/auth/token", {
         withCredentials: true,
@@ -27,15 +28,18 @@ function App() {
         console.log(response.data);
         setUser(response.data);
       })
-      .catch((response) => {
-        console.log(response);
-        if (response.response) {
-          setError(response.response.statusText);
+      .catch((error) => {
+        console.log(error);
+        if (error.response) {
+          setError(error.response.data.error);
+        } else {
+          setError(error.message);
         }
       });
   }, []);
 
   const handleRegister = async (username, password) => {
+    setError("");
     try {
       const response = await axios.post(
         "http://localhost:8000/auth/register",
@@ -46,11 +50,17 @@ function App() {
       );
       console.log(response);
     } catch (error) {
-      setError(error.message);
+      console.log(error);
+      if (error.response) {
+        setError(error.response.data.error);
+      } else {
+        setError(error.message);
+      }
     }
   };
 
   const handleLogin = async (username, password) => {
+    setError("");
     try {
       const response = await axios.post(
         "http://localhost:8000/auth/login",
@@ -63,7 +73,31 @@ function App() {
       window.location.reload();
     } catch (error) {
       console.log(error);
-      setError(error.message);
+      if (error.response) {
+        setError(error.response.data.error);
+      } else {
+        setError(error.message);
+      }
+    }
+  };
+
+  const handleLogout = async () => {
+    setError("");
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/auth/logout",
+        {},
+        { withCredentials: true }
+      );
+      console.log(response);
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+      if (error.response) {
+        setError(error.response.data.error);
+      } else {
+        setError(error.message);
+      }
     }
   };
 
@@ -71,6 +105,7 @@ function App() {
     <>
       <Login handleLogin={handleLogin} />
       <Register handleRegister={handleRegister} />
+      <button onClick={() => handleLogout()}>Logout</button>
       {user && user.username}
       {error}
     </>

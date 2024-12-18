@@ -14,7 +14,7 @@ exports.login = async (req, res) => {
   const { username, password } = req.body;
   const user = users.find((u) => u.username === username);
   if (!user) {
-    res.status(400).json({ error: "User not found" });
+    return res.status(400).json({ error: "User not found" });
   }
   const valid = await bcrypt.compare(password, user.password);
   if (!valid) return res.status(401).json({ error: "Invalid password" });
@@ -28,13 +28,20 @@ exports.login = async (req, res) => {
 
 exports.token = (req, res) => {
   const token = req.cookies.token;
-  if (!token) return res.status(401).send("Unauthorized");
+  if (!token) return res.status(401).send({ error: "Unauthorized" });
 
   try {
     const user = jwt.verify(token, process.env.JWT_SECRET);
     console.log(user);
     res.status(200).json(user);
   } catch (error) {
-    res.status(401).json(error);
+    res.status(401).json({ error: error.message });
   }
+};
+
+exports.logout = (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+  });
+  res.status(200).json({ message: "Logged out" });
 };
