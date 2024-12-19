@@ -1,8 +1,8 @@
 const cookie = require("cookie");
 const jwt = require("jsonwebtoken");
+const { dbMessages } = require("./model/messages");
 
 exports.verifyUser = (socket, next) => {
-  console.log("Verifying");
   const cookies = cookie.parse(socket.handshake.headers.cookie || "");
   const token = cookies["token"];
 
@@ -19,7 +19,18 @@ exports.verifyUser = (socket, next) => {
   }
 };
 
-exports.onConnection = (socket) => {
-  const username = socket.user.username;
-  console.log(`${username} connected!`);
+exports.onMessage = async (socket, io, message) => {
+  const { data, error } = await dbMessages.createMessage({
+    userId: socket.user.id,
+    message,
+  });
+  if (!error) {
+    const message = data[0];
+    message.users = { username: socket.user.username };
+    io.emit("message", message);
+  }
+};
+
+exports.getOnlineUsers = (onlineUsers, callback) => {
+  callback(onlineUsers);
 };

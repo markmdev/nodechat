@@ -1,12 +1,7 @@
-const { createClient } = require("@supabase/supabase-js");
+const DbClient = require("./DbClient");
 
-exports.users = [];
-
-class DbHandler {
-  static client = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_KEY
-  );
+class DbUsersHandler {
+  static client = DbClient.client;
 
   static async createUser({ username, password }) {
     const { data, error } = await this.client
@@ -25,8 +20,8 @@ class DbHandler {
   }
 }
 
-exports.db = {
-  _dbHandler: DbHandler,
+exports.dbUsers = {
+  _dbHandler: DbUsersHandler,
   createUser: async function ({ username, password }) {
     const { data, error } = await this._dbHandler.createUser({
       username,

@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { users, db } = require("../model/users");
+const { dbUsers } = require("../model/users");
+const { dbMessages } = require("../model/messages");
 
 exports.verify = (req, res, next) => {
   // Middleware for verifying user's authentication
@@ -9,7 +10,6 @@ exports.verify = (req, res, next) => {
 
   try {
     const user = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(user);
     req.user = user;
     next();
   } catch (error) {
@@ -21,7 +21,7 @@ exports.register = async (req, res) => {
   const { username, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = { username, password: hashedPassword };
-  const { data, error } = await db.createUser(newUser);
+  const { data, error } = await dbUsers.createUser(newUser);
   if (error) {
     return res.status(400).json({ error: error.message });
   }
@@ -35,8 +35,7 @@ const deletePassFromUserObject = (user) => {
 
 exports.login = async (req, res) => {
   const { username, password } = req.body;
-  const { data, error } = await db.findByUsername(username);
-  console.log(JSON.stringify(data));
+  const { data, error } = await dbUsers.findByUsername(username);
   if (error) {
     return res.status(400).json({ error: error.message });
   }
@@ -47,7 +46,7 @@ exports.login = async (req, res) => {
   const valid = await bcrypt.compare(password, user.password);
   if (!valid) return res.status(401).json({ error: "Invalid password" });
 
-  const token = jwt.sign({ username }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ id: user.id, username }, process.env.JWT_SECRET, {
     expiresIn: "1h",
   });
   res.cookie("token", token, { httpOnly: true });
@@ -60,7 +59,6 @@ exports.token = (req, res) => {
 
   try {
     const user = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(user);
     res.status(200).json(user);
   } catch (error) {
     res.status(401).json({ error: error.message });
@@ -72,4 +70,10 @@ exports.logout = (req, res) => {
     httpOnly: true,
   });
   res.status(200).json({ message: "Logged out" });
+};
+
+exports.getMessages = async (req, res) => {
+  const { data, error } = await dbMessages.getMessages();
+  if (error) return res.status(400).json({ error: error.message });
+  res.status(200).json(data);
 };
