@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { users } = require("../model/users");
+const { users, db } = require("../model/users");
 
 exports.verify = (req, res, next) => {
   // Middleware for verifying user's authentication
@@ -21,13 +21,26 @@ exports.register = async (req, res) => {
   const { username, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = { username, password: hashedPassword };
-  users.push(newUser);
-  res.status(201).json(newUser);
+  const { data, error } = await db.createUser(newUser);
+  if (error) {
+    return res.status(400).json({ error: error.message });
+  }
+  res.status(201).json(data);
+};
+
+const deletePassFromUserObject = (user) => {
+  const { password, ...newUser } = user;
+  return newUser;
 };
 
 exports.login = async (req, res) => {
   const { username, password } = req.body;
-  const user = users.find((u) => u.username === username);
+  const { data, error } = await db.findByUsername(username);
+  console.log(JSON.stringify(data));
+  if (error) {
+    return res.status(400).json({ error: error.message });
+  }
+  const user = data[0];
   if (!user) {
     return res.status(400).json({ error: "User not found" });
   }
@@ -38,7 +51,7 @@ exports.login = async (req, res) => {
     expiresIn: "1h",
   });
   res.cookie("token", token, { httpOnly: true });
-  res.status(200).json(user);
+  res.status(200).json(deletePassFromUserObject(user));
 };
 
 exports.token = (req, res) => {

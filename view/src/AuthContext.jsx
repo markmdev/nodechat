@@ -1,11 +1,38 @@
 import { useState } from "react";
 import { createContext } from "react";
 import axios from "axios";
+import { useEffect } from "react";
 
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setError("");
+    setLoading(true);
+    axios
+      .get("http://localhost:8000/auth/token", {
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log(response.data);
+        setUser(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log(error);
+        if (error.response) {
+          setError(error.response.data.error);
+        } else {
+          setError(error.message);
+        }
+      });
+  }, []);
+
   const handleRegister = async (username, password) => {
     setError(null);
     try {
@@ -38,7 +65,7 @@ export const AuthProvider = ({ children }) => {
         }
       );
       console.log(response);
-      window.location.reload();
+      setUser(response.data);
     } catch (error) {
       console.log(error);
       if (error.response) {
@@ -58,7 +85,7 @@ export const AuthProvider = ({ children }) => {
         { withCredentials: true }
       );
       console.log(response);
-      window.location.reload();
+      setUser(null);
     } catch (error) {
       console.log(error);
       if (error.response) {
@@ -71,7 +98,15 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ handleRegister, handleLogin, handleLogout, error, setError }}
+      value={{
+        handleRegister,
+        handleLogin,
+        handleLogout,
+        error,
+        setError,
+        user,
+        loading,
+      }}
     >
       {children}
     </AuthContext.Provider>

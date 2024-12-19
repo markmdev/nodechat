@@ -11,29 +11,10 @@ import { Link } from "react-router-dom";
 import Chat from "./components/Chat";
 
 function App() {
-  const [user, setUser] = useState(null);
-  const { handleLogout } = useContext(AuthContext);
+  const { handleLogout, user, loading } = useContext(AuthContext);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    setError("");
-    axios
-      .get("http://localhost:8000/auth/token", {
-        withCredentials: true,
-      })
-      .then((response) => {
-        console.log(response.data);
-        setUser(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        if (error.response) {
-          setError(error.response.data.error);
-        } else {
-          setError(error.message);
-        }
-      });
-  }, []);
+  if (loading) return <p>Loading...</p>;
 
   if (!user) {
     return (

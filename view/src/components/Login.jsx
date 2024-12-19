@@ -1,19 +1,27 @@
 import { useContext } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
 
 export default function Login({}) {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
-  const { handleLogin, error } = useContext(AuthContext);
+  const { handleLogin, error, user, loading } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setLogin("");
     setPassword("");
     handleLogin(login, password);
+    navigate("/");
   };
+
+  console.log(loading);
+
+  if (loading) return <p>Loading...</p>;
+
+  if (user) return <Navigate to="/" />;
 
   return (
     <>
