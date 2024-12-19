@@ -14,10 +14,7 @@ export default function Login({}) {
     setLogin("");
     setPassword("");
     handleLogin(login, password);
-    navigate("/");
   };
-
-  console.log(loading);
 
   if (loading) return <p>Loading...</p>;
 
@@ -45,8 +42,12 @@ export default function Login({}) {
         <button type="submit">Login</button>
       </form>
 
-      {error}
-      <br />
+      {error && (
+        <>
+          {error}
+          <br />
+        </>
+      )}
       <Link to="/">Main page</Link>
     </>
   );

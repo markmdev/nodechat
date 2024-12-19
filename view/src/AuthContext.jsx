@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }) => {
 
   const handleRegister = async (username, password) => {
     setError(null);
+    setLoading(true);
     try {
       const response = await axios.post(
         "http://localhost:8000/auth/register",
@@ -51,11 +52,14 @@ export const AuthProvider = ({ children }) => {
       } else {
         setError(error.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleLogin = async (username, password) => {
     setError(null);
+    setLoading(true);
     try {
       const response = await axios.post(
         "http://localhost:8000/auth/login",
@@ -73,11 +77,14 @@ export const AuthProvider = ({ children }) => {
       } else {
         setError(error.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleLogout = async () => {
     setError(null);
+    setLoading(true);
     try {
       const response = await axios.post(
         "http://localhost:8000/auth/logout",
@@ -93,6 +100,8 @@ export const AuthProvider = ({ children }) => {
       } else {
         setError(error.message);
       }
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -14,7 +14,6 @@ export default function Register({}) {
     setLogin("");
     setPassword("");
     handleRegister(login, password);
-    navigate("/");
   };
 
   if (loading) return <p>Loading...</p>;
@@ -42,8 +41,12 @@ export default function Register({}) {
         <br />
         <button type="submit">Register</button>
       </form>
-      {error}
-      <br />
+      {error && (
+        <>
+          {error}
+          <br />
+        </>
+      )}
       <Link to="/">Main page</Link>
     </>
   );
