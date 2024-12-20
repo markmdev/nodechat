@@ -1,3 +1,5 @@
+import { Paper } from "@mui/material";
+
 const formatDate = (timestampz) => {
   const date = new Date(timestampz.replace(" ", "T"));
   const options = {
@@ -15,7 +17,7 @@ const formatDate = (timestampz) => {
 
 export default function MessageHistory({ messages }) {
   return (
-    <div>
+    <Paper elevation={16}>
       <ul style={{ listStyleType: "none" }}>
         {messages.map((message) => (
           <li key={message.id}>
@@ -24,6 +26,6 @@ export default function MessageHistory({ messages }) {
           </li>
         ))}
       </ul>
-    </div>
+    </Paper>
   );
 }

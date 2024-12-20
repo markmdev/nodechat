@@ -4,6 +4,7 @@ import MessageHistory from "./MessageHistory";
 import { useState } from "react";
 import axios from "axios";
 import UsersPanel from "./UsersPanel";
+import Button from "@mui/material/Button";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -59,7 +60,9 @@ export default function Chat() {
         value={input}
         onChange={({ target }) => setInput(target.value)}
       ></input>
-      <button onClick={sendMessage}>Send</button>
+      <Button variant="contained" onClick={sendMessage}>
+        Send
+      </Button>
     </div>
   );
 }
