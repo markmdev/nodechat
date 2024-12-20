@@ -4,7 +4,9 @@ import MessageHistory from "./MessageHistory";
 import { useState } from "react";
 import axios from "axios";
 import UsersPanel from "./UsersPanel";
-import Button from "@mui/material/Button";
+import { Grid2 } from "@mui/material";
+import LogoutButton from "./LogoutButton";
+import MessageForm from "./MessageForm";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -50,19 +52,25 @@ export default function Chat() {
   };
 
   return (
-    <div>
+    <Grid2
+      container
+      spacing={2}
+      sx={{
+        marginX: 8,
+        marginTop: 10,
+      }}
+    >
+      <LogoutButton />
       <UsersPanel />
-      <MessageHistory messages={messages} />
-      {loading && <p>Loading...</p>}
-      <input
-        type="text"
-        name="msginput"
-        value={input}
-        onChange={({ target }) => setInput(target.value)}
-      ></input>
-      <Button variant="contained" onClick={sendMessage}>
-        Send
-      </Button>
-    </div>
+      <Grid2 item size={9}>
+        <MessageHistory messages={messages} />
+        {loading && <p>Loading...</p>}
+        <MessageForm
+          setInput={setInput}
+          input={input}
+          sendMessage={sendMessage}
+        />
+      </Grid2>
+    </Grid2>
   );
 }

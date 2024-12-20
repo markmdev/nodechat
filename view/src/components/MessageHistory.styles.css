@@ -1,0 +1,23 @@
+li {
+  display: flex;
+  margin-bottom: 10px;
+}
+.messageDate {
+  color: gray;
+  font-size: 0.9rem;
+  margin-left: auto;
+  margin-right: 20px;
+}
+.messageText {
+  margin-left: 10px;
+}
+.messageMain {
+  display: flex;
+  flex-direction: column;
+}
+.ava {
+  border-radius: 100%;
+  height: 30px;
+  width: 30px;
+  margin-right: 5px;
+}

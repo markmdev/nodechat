@@ -20,7 +20,7 @@ function App() {
     <>
       <Chat user={user} />
       <br />
-      <button onClick={() => handleLogout()}>Logout</button>
+      {/* <button onClick={() => handleLogout()}>Logout</button> */}
       {error}
     </>
   );
