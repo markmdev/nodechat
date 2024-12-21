@@ -41,7 +41,8 @@ exports.onPrivateMessage = async (socket, message, toId) => {
   const toUser = OnlineUsers.findUserById(toId);
   if (toUser) {
     const savedMessage = await saveMessageToDb(socket.user.id, message, toId);
-    toUser.socket.emit("private_message", savedMessage);
+    toUser.socket.emit("message", savedMessage);
+    socket.emit("message", savedMessage);
   } else {
     console.log("No user");
     socket.emit("error_message", `No user with id ${toId}`);

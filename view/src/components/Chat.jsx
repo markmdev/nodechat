@@ -21,9 +21,6 @@ export default function Chat() {
     socket.on("error_message", (message) => {
       console.log(message);
     });
-    socket.on("private_message", (message) => {
-      setMessages((oldMessages) => [...oldMessages, message]);
-    });
     return () => {
       socket.disconnect();
     };
@@ -58,10 +55,12 @@ export default function Chat() {
     if (input.includes("/private")) {
       const idTo = input.split(" ")[1];
       const message = input.split(" ")[2];
-      return socket.emit("private_message", message, idTo);
+      socket.emit("private_message", message, idTo);
+      setInput("");
+    } else {
+      socket.emit("message", input);
+      setInput("");
     }
-    socket.emit("message", input);
-    setInput("");
   };
 
   return (

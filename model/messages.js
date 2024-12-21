@@ -35,7 +35,6 @@ class DbMessagesHandler {
 exports.dbMessages = {
   _dbHandler: DbMessagesHandler,
   createMessage: async function ({ userId, message, toId = null }) {
-    console.log(`toId: ${toId}`);
     const { data, error } = await this._dbHandler.createMessage({
       userId,
       message,
