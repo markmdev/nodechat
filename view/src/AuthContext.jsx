@@ -18,13 +18,11 @@ export const AuthProvider = ({ children }) => {
         withCredentials: true,
       })
       .then((response) => {
-        console.log(response.data);
         setUser(response.data);
         setLoading(false);
       })
       .catch((error) => {
         setLoading(false);
-        console.log(error);
         if (error.response) {
           setError(error.response.data.error);
         } else {
@@ -44,9 +42,7 @@ export const AuthProvider = ({ children }) => {
           withCredentials: true,
         }
       );
-      console.log(response);
     } catch (error) {
-      console.log(error);
       if (error.response) {
         setError(error.response.data.error);
       } else {
@@ -68,10 +64,8 @@ export const AuthProvider = ({ children }) => {
           withCredentials: true,
         }
       );
-      console.log(response);
       setUser(response.data);
     } catch (error) {
-      console.log(error);
       if (error.response) {
         setError(error.response.data.error);
       } else {
@@ -91,10 +85,8 @@ export const AuthProvider = ({ children }) => {
         {},
         { withCredentials: true }
       );
-      console.log(response);
       setUser(null);
     } catch (error) {
-      console.log(error);
       if (error.response) {
         setError(error.response.data.error);
       } else {

@@ -9,12 +9,11 @@ export default function UsersPanel() {
   useEffect(() => {
     socket.on("online_users", (users) => {
       setOnlineUsers(users);
-      console.log(users);
     });
   }, []);
 
   return (
-    <Grid2 item size={3}>
+    <Grid2 size={{ xs: 12, md: 3 }}>
       <Card
         sx={{
           padding: 2,

@@ -73,7 +73,7 @@ exports.logout = (req, res) => {
 };
 
 exports.getMessages = async (req, res) => {
-  const { data, error } = await dbMessages.getMessages();
+  const { data, error } = await dbMessages.getMessages(req.user.id);
   if (error) return res.status(400).json({ error: error.message });
   res.status(200).json(data);
 };

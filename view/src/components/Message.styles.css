@@ -1,0 +1,41 @@
+.messageDate {
+  color: gray;
+  font-size: 0.8rem;
+  margin-left: auto;
+  margin-right: 5px;
+  text-align: right;
+}
+.messageText {
+  margin-left: 10px;
+}
+.messageMain {
+  display: flex;
+  flex-direction: column;
+  padding: 3px;
+}
+.ava {
+  border-radius: 100%;
+  height: 30px;
+  width: 30px;
+  margin-right: 5px;
+}
+.inward-message {
+  background-color: #87ceeb;
+}
+.outward-message {
+  background-color: #ffb6c1;
+}
+.messageContainer {
+  display: flex;
+  margin-bottom: 4px;
+}
+.privateInfo {
+  font-size: 0.9rem;
+}
+.message-header {
+  margin: 0;
+}
+.message-arrow {
+  font-size: 0.7rem;
+  color: gray;
+}

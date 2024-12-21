@@ -18,6 +18,12 @@ export default function Chat() {
     socket.on("message", (message) => {
       setMessages((oldMessages) => [...oldMessages, message]);
     });
+    socket.on("error_message", (message) => {
+      console.log(message);
+    });
+    socket.on("private_message", (message) => {
+      setMessages((oldMessages) => [...oldMessages, message]);
+    });
     return () => {
       socket.disconnect();
     };
@@ -26,7 +32,9 @@ export default function Chat() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:8000/chat/getmessages")
+      .get("http://localhost:8000/chat/getmessages", {
+        withCredentials: true,
+      })
       .then((response) => {
         const newMessages = response.data;
         if (newMessages) {
@@ -47,6 +55,11 @@ export default function Chat() {
 
   const sendMessage = () => {
     if (input === "") return;
+    if (input.includes("/private")) {
+      const idTo = input.split(" ")[1];
+      const message = input.split(" ")[2];
+      return socket.emit("private_message", message, idTo);
+    }
     socket.emit("message", input);
     setInput("");
   };
@@ -56,13 +69,13 @@ export default function Chat() {
       container
       spacing={2}
       sx={{
-        marginX: 8,
+        marginX: 2,
         marginTop: 10,
       }}
     >
       <LogoutButton />
       <UsersPanel />
-      <Grid2 item size={9}>
+      <Grid2 size={{ xs: 12, md: 9 }}>
         <MessageHistory messages={messages} />
         {loading && <p>Loading...</p>}
         <MessageForm

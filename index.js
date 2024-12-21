@@ -1,6 +1,6 @@
 const express = require("express");
 const { createServer } = require("node:http");
-const { newSocket } = require("./socket");
+const { newSocket } = require("./socket_server/socket");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
