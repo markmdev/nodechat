@@ -7,8 +7,7 @@ import Chat from "./components/Chat";
 import Home from "./pages/Home";
 
 function App() {
-  const { handleLogout, user, loading } = useContext(AuthContext);
-  const [error, setError] = useState(null);
+  const { user, loading, error } = useContext(AuthContext);
 
   if (loading) return <p>Loading...</p>;
 
@@ -20,7 +19,6 @@ function App() {
     <>
       <Chat user={user} />
       <br />
-      {/* <button onClick={() => handleLogout()}>Logout</button> */}
       {error}
     </>
   );

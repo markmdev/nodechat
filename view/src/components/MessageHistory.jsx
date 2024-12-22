@@ -4,7 +4,11 @@ import { useRef } from "react";
 import "./MessageHistory.styles.css";
 import Message from "./Message";
 
-export default function MessageHistory({ messages, setSendingPrivateTo }) {
+export default function MessageHistory({
+  messages,
+  setSendingPrivateTo,
+  socketError,
+}) {
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -33,6 +37,9 @@ export default function MessageHistory({ messages, setSendingPrivateTo }) {
             />
           </li>
         ))}
+        {socketError && (
+          <li style={{ color: "red", fontSize: "2rem" }}>Loading.........</li>
+        )}
       </ul>
     </Paper>
   );

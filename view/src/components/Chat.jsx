@@ -12,6 +12,7 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
+  const [socketError, setSocketError] = useState(null);
   const [sendingPrivateTo, setSendingPrivateTo] = useState(null);
 
   useEffect(() => {
@@ -22,6 +23,8 @@ export default function Chat() {
     socket.on("error_message", (message) => {
       console.log(message);
     });
+    socket.on("disconnect", (reason) => setSocketError(reason));
+    socket.on("connect", () => setSocketError(null));
     return () => {
       socket.disconnect();
     };
@@ -85,6 +88,7 @@ export default function Chat() {
         <MessageHistory
           messages={messages}
           setSendingPrivateTo={setSendingPrivateTo}
+          socketError={socketError}
         />
         {loading && <p>Loading...</p>}
         <MessageForm

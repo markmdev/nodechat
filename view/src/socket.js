@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { io } from "socket.io-client";
 
 const URL = process.env.SOCKET_URL || "http://localhost:8000";

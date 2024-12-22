@@ -40,7 +40,6 @@ export default function Form({
         >
           <TextField
             required
-            id="outlined-required"
             label="Required"
             helperText="Login"
             value={login}
@@ -49,7 +48,6 @@ export default function Form({
           <br />
           <TextField
             required
-            id="outlined-required"
             label="Required"
             helperText="Password"
             type="password"

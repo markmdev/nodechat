@@ -3,6 +3,21 @@ const jwt = require("jsonwebtoken");
 const { dbUsers } = require("../model/users");
 const { dbMessages } = require("../model/messages");
 
+const verifyUserCredentials = async (username, password) => {
+  const { data, error } = await dbUsers.findByUsername(username);
+  if (error) {
+    return { verified: false, user: null, error: error.message };
+  }
+  const user = data[0];
+  if (!user) {
+    return { verified: false, user: null, error: "User not found" };
+  }
+  const valid = await bcrypt.compare(password, user.password);
+  if (!valid) return { verified: false, user: null, error: "Invalid password" };
+
+  return { verified: true, user, error: null };
+};
+
 exports.verify = (req, res, next) => {
   // Middleware for verifying user's authentication
   const token = req.cookies.token;
@@ -13,7 +28,7 @@ exports.verify = (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    res.status(401).json({ error: error.message });
+    res.redirect(401, "/login");
   }
 };
 
@@ -35,16 +50,14 @@ const deletePassFromUserObject = (user) => {
 
 exports.login = async (req, res) => {
   const { username, password } = req.body;
-  const { data, error } = await dbUsers.findByUsername(username);
-  if (error) {
-    return res.status(400).json({ error: error.message });
+  const { verified, user, error } = await verifyUserCredentials(
+    username,
+    password
+  );
+
+  if (!verified) {
+    res.status(401).json({ error });
   }
-  const user = data[0];
-  if (!user) {
-    return res.status(400).json({ error: "User not found" });
-  }
-  const valid = await bcrypt.compare(password, user.password);
-  if (!valid) return res.status(401).json({ error: "Invalid password" });
 
   const token = jwt.sign({ id: user.id, username }, process.env.JWT_SECRET, {
     expiresIn: "1h",
@@ -61,7 +74,7 @@ exports.token = (req, res) => {
     const user = jwt.verify(token, process.env.JWT_SECRET);
     res.status(200).json(user);
   } catch (error) {
-    res.status(401).json({ error: error.message });
+    res.redirect(401, "/login");
   }
 };
 
