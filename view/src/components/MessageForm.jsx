@@ -9,6 +9,11 @@ export default function MessageForm({
   setSendingPrivateTo,
   socketError,
 }) {
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      sendMessage();
+    }
+  };
   return (
     <Box
       sx={{
@@ -29,6 +34,7 @@ export default function MessageForm({
         helperText="Message"
         size="large"
         value={input}
+        onKeyDown={handleKeyDown}
         onChange={({ target }) => setInput(target.value)}
       />
       <Button
