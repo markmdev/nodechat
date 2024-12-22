@@ -4,7 +4,7 @@ import { useRef } from "react";
 import "./MessageHistory.styles.css";
 import Message from "./Message";
 
-export default function MessageHistory({ messages }) {
+export default function MessageHistory({ messages, setSendingPrivateTo }) {
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -27,7 +27,10 @@ export default function MessageHistory({ messages }) {
       <ul style={{ listStyleType: "none" }}>
         {messages.map((message) => (
           <li key={message.id}>
-            <Message message={message} />
+            <Message
+              message={message}
+              setSendingPrivateTo={setSendingPrivateTo}
+            />
           </li>
         ))}
       </ul>

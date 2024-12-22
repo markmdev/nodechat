@@ -1,6 +1,8 @@
 import { useContext } from "react";
 import "./Message.styles.css";
 import { AuthContext } from "../AuthContext";
+import { useState } from "react";
+import UserPopover from "./UserPopover";
 
 const formatDate = (timestampz) => {
   const date = new Date(timestampz.replace(" ", "T"));
@@ -17,7 +19,18 @@ const formatDate = (timestampz) => {
   return formattedDate.replace(",", "").split(" ").slice(1);
 };
 
-export default function Message({ message }) {
+export default function Message({ message, setSendingPrivateTo }) {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const id = anchorEl ? "simple-popover" : undefined;
+
+  const handleClick = (event) => {
+    setAnchorEl(event.target);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const { user } = useContext(AuthContext);
   const username = user.username;
   let privateMessageClass = "";
@@ -31,7 +44,13 @@ export default function Message({ message }) {
       <img src="https://i.pravatar.cc/20" className="ava" />
       <div className={`messageMain ${privateMessageClass}`}>
         <p className="message-header">
-          <b>{message.from.username}:</b>{" "}
+          <b
+            className="message-from"
+            aria-describedby={id}
+            onClick={handleClick}
+          >
+            {message.from.username}:
+          </b>{" "}
           {message.to && (
             <i className="privateInfo">
               (Private message to: {message.to.username})
@@ -44,6 +63,17 @@ export default function Message({ message }) {
         </span>{" "}
       </div>
       <i className="messageDate">({formatDate(message.created_at)})</i>
+      <UserPopover
+        anchorEl={anchorEl}
+        id={id}
+        handleClose={handleClose}
+        setSendingPrivateTo={() =>
+          setSendingPrivateTo({
+            userId: message.user_id,
+            username: message.from.username,
+          })
+        }
+      />
     </div>
   );
 }

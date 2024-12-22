@@ -12,6 +12,7 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
+  const [sendingPrivateTo, setSendingPrivateTo] = useState(null);
 
   useEffect(() => {
     socket.connect();
@@ -52,13 +53,19 @@ export default function Chat() {
 
   const sendMessage = () => {
     if (input === "") return;
-    if (input.includes("/private")) {
-      const idTo = input.split(" ")[1];
-      const message = input.split(" ")[2];
+    let finalInput = input;
+    if (sendingPrivateTo) {
+      finalInput = `/private ${sendingPrivateTo.userId} ${input}`;
+      setSendingPrivateTo(null);
+    }
+    if (finalInput.includes("/private")) {
+      const idTo = finalInput.split(" ")[1];
+      const message = finalInput.split(" ")[2];
+      console.log("Sending private");
       socket.emit("private_message", message, idTo);
       setInput("");
     } else {
-      socket.emit("message", input);
+      socket.emit("message", finalInput);
       setInput("");
     }
   };
@@ -75,12 +82,17 @@ export default function Chat() {
       <LogoutButton />
       <UsersPanel />
       <Grid2 size={{ xs: 12, md: 9 }}>
-        <MessageHistory messages={messages} />
+        <MessageHistory
+          messages={messages}
+          setSendingPrivateTo={setSendingPrivateTo}
+        />
         {loading && <p>Loading...</p>}
         <MessageForm
           setInput={setInput}
           input={input}
           sendMessage={sendMessage}
+          sendingPrivateTo={sendingPrivateTo}
+          setSendingPrivateTo={setSendingPrivateTo}
         />
       </Grid2>
     </Grid2>

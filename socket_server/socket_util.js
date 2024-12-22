@@ -38,13 +38,13 @@ exports.onMessage = async (socket, io, message) => {
 };
 
 exports.onPrivateMessage = async (socket, message, toId) => {
+  console.log("Got message");
   const toUser = OnlineUsers.findUserById(toId);
+  const savedMessage = await saveMessageToDb(socket.user.id, message, toId);
+  socket.emit("message", savedMessage);
   if (toUser) {
-    const savedMessage = await saveMessageToDb(socket.user.id, message, toId);
     toUser.socket.emit("message", savedMessage);
-    socket.emit("message", savedMessage);
   } else {
     console.log("No user");
-    socket.emit("error_message", `No user with id ${toId}`);
   }
 };

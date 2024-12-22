@@ -1,13 +1,26 @@
 import SendIcon from "@mui/icons-material/Send";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Button, Chip } from "@mui/material";
 
-export default function MessageForm({ setInput, input, sendMessage }) {
+export default function MessageForm({
+  setInput,
+  input,
+  sendMessage,
+  sendingPrivateTo,
+  setSendingPrivateTo,
+}) {
   return (
     <Box
       sx={{
         marginTop: 3,
       }}
     >
+      {sendingPrivateTo && (
+        <Chip
+          label={`Sending private to ${sendingPrivateTo.username}`}
+          variant="outlined"
+          onDelete={() => setSendingPrivateTo(null)}
+        />
+      )}
       <TextField
         sx={{ marginTop: 2 }}
         fullWidth
