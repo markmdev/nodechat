@@ -68,6 +68,7 @@ exports.login = async (req, res) => {
     httpOnly: true,
     secure: isProduction,
     sameSite: "None",
+    domain: ".render.com",
   });
   res.status(200).json(deletePassFromUserObject(user));
 };
