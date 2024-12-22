@@ -4,3 +4,5 @@ node_modules/
 view/.env
 view/node_modules/
 view/package-lock.json
+dist
+view/dist/

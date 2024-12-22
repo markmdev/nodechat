@@ -7,6 +7,7 @@ export default function MessageForm({
   sendMessage,
   sendingPrivateTo,
   setSendingPrivateTo,
+  socketError,
 }) {
   return (
     <Box
@@ -32,6 +33,7 @@ export default function MessageForm({
       />
       <Button
         variant="contained"
+        disabled={socketError ? true : false}
         onClick={sendMessage}
         endIcon={<SendIcon />}
         sx={{ height: "50px" }}

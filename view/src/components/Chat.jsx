@@ -33,7 +33,7 @@ export default function Chat() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:8000/chat/getmessages", {
+      .get(`${import.meta.env.VITE_SERVER_URL}/chat/getmessages`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -97,6 +97,7 @@ export default function Chat() {
           sendMessage={sendMessage}
           sendingPrivateTo={sendingPrivateTo}
           setSendingPrivateTo={setSendingPrivateTo}
+          socketError={socketError}
         />
       </Grid2>
     </Grid2>

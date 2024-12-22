@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     setError("");
     setLoading(true);
     axios
-      .get("http://localhost:8000/auth/token", {
+      .get(`${import.meta.env.VITE_SERVER_URL}/auth/token`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/auth/register",
+        `${import.meta.env.VITE_SERVER_URL}/auth/register`,
         { username, password },
         {
           withCredentials: true,
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/auth/login",
+        `${import.meta.env.VITE_SERVER_URL}/auth/login`,
         { username, password },
         {
           withCredentials: true,
@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await axios.post(
-        "http://localhost:8000/auth/logout",
+        `${import.meta.env.VITE_SERVER_URL}/auth/logout`,
         {},
         { withCredentials: true }
       );

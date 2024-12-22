@@ -9,14 +9,14 @@ const chatRouter = require("./routes/chat");
 
 const app = express();
 const server = createServer(app);
-const PORT = process.env.port || 8000;
+const PORT = process.env.PORT || 8000;
 
 newSocket(server);
 
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL,
   })
 );
 app.use(express.json());
