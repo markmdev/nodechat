@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const { dbUsers } = require("../model/users");
 const { dbMessages } = require("../model/messages");
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const verifyUserCredentials = async (username, password) => {
   const { data, error } = await dbUsers.findByUsername(username);
   if (error) {
@@ -62,7 +64,11 @@ exports.login = async (req, res) => {
   const token = jwt.sign({ id: user.id, username }, process.env.JWT_SECRET, {
     expiresIn: "1h",
   });
-  res.cookie("token", token, { httpOnly: true });
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: "None",
+  });
   res.status(200).json(deletePassFromUserObject(user));
 };
 
@@ -81,6 +87,8 @@ exports.token = (req, res) => {
 exports.logout = (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
+    secure: isProduction,
+    sameSite: "None",
   });
   res.status(200).json({ message: "Logged out" });
 };
