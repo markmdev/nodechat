@@ -66,9 +66,10 @@ exports.login = async (req, res) => {
   });
   res.cookie("token", token, {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: "None",
+    secure: true,
+    sameSite: "none",
     domain: ".render.com",
+    path: "/",
   });
   res.status(200).json(deletePassFromUserObject(user));
 };
@@ -88,8 +89,10 @@ exports.token = (req, res) => {
 exports.logout = (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: "None",
+    secure: true,
+    sameSite: "none",
+    domain: ".render.com",
+    path: "/",
   });
   res.status(200).json({ message: "Logged out" });
 };
